@@ -64,9 +64,13 @@
       for (let i = 0; i < collection.length; i++) {
         iterator(collection[i], i, collection);
       }
+    } else {
+    // Check if collection is an object.
+      for (let key in collection) {
+        iterator(collection[key], key, collection);
+      }
     }
 
-    // Check if collection is an object.
   };
 
   // Returns the index at which value can be found in the array, or -1 if value
@@ -88,16 +92,63 @@
 
   // Return all elements of an array that pass a truth test.
   _.filter = function(collection, test) {
+    // Create an result array.
+    var filterResult = [];
+
+    // Iterate through the collection.
+    _.each(collection, function(item) {
+      // Check if the test is true.
+      if (test(item)) {
+        // Push the value at collection index to result array.
+        filterResult.push(item);
+      }
+    });
+
+    // Return result array.
+    return filterResult;
   };
 
   // Return all elements of an array that don't pass a truth test.
   _.reject = function(collection, test) {
     // TIP: see if you can re-use _.filter() here, without simply
     // copying code in and modifying it
+    return _.filter(collection, function(item) {
+      return !test(item);
+    });
   };
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array, isSorted, iterator) {
+    // Create an result array.
+    var uniqResult = [];
+
+    // create transformed array.
+    var transformedArray = [];
+
+    // check if iterator has been passed into function
+    if (iterator) {
+      // Iterate through the array.
+      _.each(array, function(item, index, list) {
+        var transformedVal = iterator(item);
+        // Check to see if transformed array already includes iteratee value
+        if (_.indexOf(transformedArray, transformedVal) === -1) {
+          transformedArray.push(transformedVal);
+          uniqResult.push(item);
+        }
+      });
+    } else {
+      // Iterate through the array.
+      _.each(array, function(item, index, list) {
+        // Check if item is not in result array.
+        // If not, push into result array.
+          if (!uniqResult.includes(item)) {
+             uniqResult.push(item);
+          }
+      });
+    }
+
+    // Return result array.
+    return uniqResult;
   };
 
 
